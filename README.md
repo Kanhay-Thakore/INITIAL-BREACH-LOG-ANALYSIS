@@ -18,20 +18,6 @@ Full forensic analysis of a targeted corporate network breach that occurred on *
 
 ---
 
-## 👥 Team 6 — Capstone Project
-
-| Name | Student ID | Role |
-|------|-----------|------|
-| Kanhay Thakore | 041175596 | Presentation Design & Final Edits |
-| Mitanshi Solanki | 041176380 | Flag Resolving (Flags 1–10) |
-| Nishit Nagbanshi | 041131555 | Presentation Design & Slide Layout |
-| Rajat Mani | 041123478 | Report Development & Narrative |
-| Dominic Panganiban | 041129386 | Flag Resolving & Report Development |
-
-**Submission Date:** June 4, 2025
-
----
-
 ## 📊 Performance Metrics
 
 | Metric | Value | Details |
@@ -610,10 +596,7 @@ Full project reports available:
 ---
 
 ## 🎓 Project Context
-
-**Course:** CST8812 — Cyber Range / Capstone  
-**Institution:** Algonquin College  
-**Submission Date:** June 4, 2025  
+ 
 **Investigation Platform:** ELK Stack (Kibana) + Zeek + Windows Event Logs
 
 **Project Deliverables:**
