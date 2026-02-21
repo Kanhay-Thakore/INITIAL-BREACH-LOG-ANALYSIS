@@ -276,7 +276,7 @@ Channel:        Security
 Computer:       aks1.mssa.str
 ```
 
-![Successful Login - 6 hits Kibana](images/event06_bruteforce_4625_02.png.png)
+![Successful Login - 6 hits Kibana](images/event06_bruteforce_4625_02.png)
 
 *Windows Event Logs showing successful authentication — 6 confirmed hits from 83.97.115.19 (flagged in multiple threat intelligence databases for RDP brute-force)*
 
