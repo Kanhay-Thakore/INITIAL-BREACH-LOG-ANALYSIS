@@ -154,7 +154,7 @@ Log Source: Zeek network logs / Firewall SIEM
 ```
 
 ![Network Scan - SIEM Kibana View](images/event01_udp_scan_kibana_01.png)
-![Network Scan - Expanded Document View](images/event01_udp_scan_kibana_02.png)
+
 
 *Firewall/SIEM logs showing UDP scan activity originating from 10.0.2.41 — 8,028 hits detected*
 
@@ -174,7 +174,7 @@ User Type:  User
 ```
 
 ![Registry Modification - Kibana View](images/event02_registry_mod_kibana_01.png)
-![Registry Modification - Expanded Log](images/event02_registry_mod_kibana_02.png)
+
 
 *Evidence of registry value changes recorded in Windows Event Logs — 516 hits, confirmed Sysmon Event ID 13*
 
@@ -258,13 +258,10 @@ Log Level:      Information
 ```
 
 ![Brute Force - Failed Logins Kibana](images/event06_bruteforce_4625_01.png)
-![Brute Force - Expanded Failure Log](images/event06_bruteforce_4625_02.png)
 
 *Windows Event Logs showing failed login attempts — 506 hits confirming ongoing brute-force attack against wksadmin*
 
 ---
-
-### Event 7 — Credential Access: Successful Brute-Force Login
 
 **Timestamp:** November 11, 2022 | 12:48 PM
 
@@ -280,13 +277,12 @@ Computer:       aks1.mssa.str
 ```
 
 ![Successful Login - 6 hits Kibana](images/event07_successful_login_4624_01.png)
-![Successful Login - Expanded Document](images/event07_successful_login_4624_02.png)
 
 *Windows Event Logs showing successful authentication — 6 confirmed hits from 83.97.115.19 (flagged in multiple threat intelligence databases for RDP brute-force)*
 
 ---
 
-### Event 8 — Discovery: Malicious File Creation
+### Event 7 — Discovery: Malicious File Creation
 
 **Timestamp:** November 11, 2022 | 11:30 AM
 
@@ -300,14 +296,13 @@ User:       NT AUTHORITY\SYSTEM
 Message:    scan* (file creation activity)
 ```
 
-![Discovery - Java Malware Execution Kibana](images/event08_malicious_jar_kibana_01.png)
-![Discovery - File Creation Logs](images/event08_malicious_jar_kibana_02.png)
+![Discovery - Java Malware Execution Kibana](images/event07_malicious_jar_kibana_01.png)
 
 *Windows Event Logs showing suspicious file creation — malicious.jar executed via java.exe at 11:30:38 AM, 167 hits detected*
 
 ---
 
-### Event 9 — Lateral Movement / C2: Outbound Connection to External Host
+### Event 8 — Lateral Movement / C2: Outbound Connection to External Host
 
 **Timestamp:** November 11, 2022 | 12:50 PM – 13:28 PM
 
@@ -321,14 +316,13 @@ ASN:              8068 (Microsoft — North America)
 Continent:        North America | United States
 ```
 
-![C2 Outbound - Kibana Network Logs](images/event09_c2_outbound_204_01.png)
-![C2 Outbound - Expanded Geo Log](images/event09_c2_outbound_204_02.png)
+![C2 Outbound - Kibana Network Logs](images/event08_c2_outbound_204_01.png)
 
 *Network logs showing outbound communication from 10.0.2.24 — 42,479 hits, destination geo-located to United States/Microsoft infrastructure*
 
 ---
 
-### Event 10 — Command & Control: Suspicious External Connection (DNS Tunneling)
+### Event 9 — Command & Control: Suspicious External Connection (DNS Tunneling)
 
 **Timestamp:** November 11, 2022 | 12:53 PM
 
@@ -341,14 +335,13 @@ Destination IP 2:   10.0.2.8 (Internal Pivoting Point)
 Protocol:           UDP (stealthy data exfiltration)
 ```
 
-![DNS Tunnel - Kibana Network Logs](images/event10_dns_tunnel_8844_01.png)
-![DNS Tunnel - Expanded Connection Document](images/event10_dns_tunnel_8844_02.png)
+![DNS Tunnel - Kibana Network Logs](images/event09_dns_tunnel_8844_01.png)
 
 *Network logs showing UDP-based outbound communication — possible DNS tunneling via 8.8.4.4 with internal pivoting through 10.0.2.8*
 
 ---
 
-### Event 11 — Lateral Movement: Unauthorized Authentication (Account RRI)
+### Event 10 — Lateral Movement: Unauthorized Authentication (Account RRI)
 
 **Timestamp:** November 11, 2022 | 11:26 AM
 
@@ -363,19 +356,17 @@ Authentication Type:  Delegation
 Logon Process:        Advapi
 ```
 
-![Lateral Movement - Unauthorized Auth Kibana](images/event11_lateral_rri_auth_01.png)
-![Lateral Movement - Expanded Delegation Log](images/event11_lateral_rri_auth_02.png)
+![Lateral Movement - Unauthorized Auth Kibana](images/event10_lateral_rri_auth_01.png)
 
 *Windows Event Logs showing a successful authentication event for account RRI — 1,209 hits, delegation logon confirming lateral movement to another system*
 
 ---
 
-### Event 12 — Collection: Accessing Registry & Sensitive Data
+### Event 11 — Collection: Accessing Registry & Sensitive Data
 
 **Timestamp:** November 11, 2022 | 11:43 AM
 
 The attacker accessed sensitive registry paths using `svchost.exe` under `NT AUTHORITY\SYSTEM`. The `RecentDocs` registry key was accessed, indicating reconnaissance of recently accessed files — a precursor to targeted data exfiltration.
-
 ```
 Registry Object:  HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs
 Event Type:       Object Access
@@ -383,14 +374,39 @@ User Account:     NT AUTHORITY\SYSTEM (elevated permissions)
 Process:          C:\WINDOWS\system32\svchost.exe
 ```
 
-![Registry Collection - Kibana Logs](images/event12_registry_collection_01.png)
-![Registry Collection - Expanded Object Access](images/event12_registry_collection_02.png)
+**MITRE ATT&CK Mapping:**
+- `T1005` – Data from Local System *(reading sensitive files, logs, or registry entries)*
+- `T1012` – Query Registry *(pulling system information from Windows Registry)*
+- `T1213` – Data from Information Repositories *(collecting user-related data)*
+
+![Registry Collection - Kibana Logs](images/event11_registry_collection_01.png)
 
 *Logs showing access to registry objects and possible sensitive information retrieval — 162 hits across RecentDocs and CapabilityAccessManager paths*
 
 ---
 
-### Event 13 — Persistence: Scheduled Task Created (12:31 PM)
+#### November 11, 2022 | 12:30 PM — Command & Control: Registry Modification for Persistence
+
+Shortly after harvesting sensitive registry data, the attacker modified the `HKLM\...\CurrentVersion\Run` key to establish a persistent connection back to an external C2 server. A new service (`wsmprovhost`) was created — commonly associated with **Windows Remote Management (WinRM)** — indicating a Remote Access Tool (RAT) was deployed and configured to beacon out to `83.97.115.19`.
+```
+Registry Path Modified:  HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+Destination IP:          83.97.115.19  ← Potential external command server
+Process:                 svchost.exe (commonly used in malware communications)
+Service Created:         wsmprovhost (Windows Remote Management — WinRM)
+```
+
+**Impact:** The attacker may have established persistence for a remote access tool (RAT) or malware communicating with a C2 server.
+
+**MITRE ATT&CK Mapping:**
+- `T1095` – Non-Application Layer Protocol *(C2 over non-standard ports)*
+- `T1219` – Remote Access Software *(possible RAT deployment via WinRM)*
+- `T1547` – Boot or Logon AutoStart Execution *(registry-based persistence surviving reboots)*
+
+![C2 Registry Persistence - Kibana Logs](images/event11_c2_registry_run_01.png)
+
+*Logs showing registry modifications tied to external IP 83.97.115.19 — wsmprovhost service created, svchost.exe used as C2 relay process to maintain long-term access*
+
+### Event 12 — Persistence: Scheduled Task Created (12:31 PM)
 
 **Timestamp:** November 11, 2022 | 12:31 PM
 
@@ -404,14 +420,13 @@ Task Name:       "Scheduled Task" (generic — potential obfuscation)
 OS Platform:     Windows 10 Pro (10.0.19041.1466)
 ```
 
-![Persistence Scheduled Task - Kibana](images/event13_schtask_1231_kibana_01.png)
-![Persistence Scheduled Task - Expanded Log](images/event13_schtask_1231_kibana_02.png)
+![Persistence Scheduled Task - Kibana](images/event12_schtask_1231_kibana_01.png)
 
 *Logs showing creation of a scheduled task on 10.0.2.42 — 1,950 hits, stored in UpdateOrchestrator path for stealth persistence*
 
 ---
 
-### Event 14 — Impact: Data Modification & Possible Encryption
+### Event 13 — Impact: Data Modification & Possible Encryption
 
 **Timestamp:** November 11, 2022 | 11:37 AM
 
@@ -426,8 +441,7 @@ SHA1:          E999E05D0D64182297AF261...
 SHA256:        MD5-132DF1E77390C5DE7E0DF1292C2319BF...
 ```
 
-![Impact Data Modification - Kibana](images/event14_winword_impact_01.png)
-![Impact Data Modification - Expanded Process Log](images/event14_winword_impact_02.png)
+![Impact Data Modification - Kibana](images/event13_winword_impact_01.png)
 
 *Logs showing WINWORD.EXE process execution modifying EnterpriseTemplate.dotx — 36 hits, run as SYSTEM from C:\Users\Public\Documents\*
 
