@@ -604,8 +604,8 @@ SHA256:        MD5-132DF1E77390C5DE7E0DF1292C2319BF...
 
 Full project reports available:
 
-- **[Capstone Report — Initial Breach Log Analysis](reports/CST8812_Capstone_Report_Team6.pdf)**
-- **[Presentation Slides](reports/CST8812_Capstone_Presentation_Team6.pdf)**
+- **[Capstone Report — Initial Breach Log Analysis](reports/S1P2_Final_Report_With_IOC_Timeline 1.pdf)**
+- **[Presentation Slides](reports/Initial_Breach_Log_Analysis.pdf)**
 
 ---
 
